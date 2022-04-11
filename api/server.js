@@ -50,6 +50,18 @@ server.get("/api/users/:id", (req, res) => {
     });
 });
 
+server.delete("/api/users/:id", async (req, res) => {
+  const possibleUser = await User.findById(req.params.id);
+  if (!possibleUser) {
+    res
+      .status(404)
+      .json({ message: "The user with the specified ID does not exist" });
+  } else {
+    const deletedUser = await User.remove(possibleUser.id);
+    res.status(200).json(deletedUser);
+  }
+});
+
 server.use("*", (req, res) => {
   res.status(404).json({ message: "not found" });
 });
